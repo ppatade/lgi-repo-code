@@ -44,7 +44,7 @@ public class SimpleRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .to("https://63cab6c4f36cbbdfc75e8aa1.mockapi.io/Motor")
                 .convertBodyTo(String.class)
-            .when(simple("${header.client}=='coverfox'"))
+            .when(simple("${header.client} == 'coverfox'"))
                 .to("atlasmap:maps/policybazaar.adm")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
