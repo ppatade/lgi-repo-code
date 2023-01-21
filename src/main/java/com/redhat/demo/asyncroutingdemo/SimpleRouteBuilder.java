@@ -42,19 +42,19 @@ public class SimpleRouteBuilder extends RouteBuilder {
                 .to("atlasmap:maps/policybazaar.adm")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .to("https://63cab6c4f36cbbdfc75e8aa1.mockapi.io/Motor")
+                .to("https://63cab6c4f36cbbdfc75e8aa1.mockapi.io/Motor?bridgeEndpoint=true")
                 .convertBodyTo(String.class)
             .when(simple("${header.client} == 'coverfox'"))
                 .to("atlasmap:maps/policybazaar.adm")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .to("https://63cab6c4f36cbbdfc75e8aa1.mockapi.io/Motor")
+                .to("https://63cab6c4f36cbbdfc75e8aa1.mockapi.io/Motor?bridgeEndpoint=true")
                 .convertBodyTo(String.class)
             .otherwise()
                 .to("atlasmap:maps/policybazaar.adm")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .to("https://63cab6c4f36cbbdfc75e8aa1.mockapi.io/Motor")
+                .to("https://63cab6c4f36cbbdfc75e8aa1.mockapi.io/Motor?bridgeEndpoint=true")
                 .convertBodyTo(String.class);;
 
     }
