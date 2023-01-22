@@ -38,25 +38,17 @@ public class SimpleRouteBuilder extends RouteBuilder {
         from("direct:async-quote")
         .wireTap("direct:wiretap-quotelo-req")
         .choice()
-            .when(simple("${header.client} == 'policybazaar'"))
-      //          .toD("atlasmap:maps/${header.client}.adm")
-                .toD("atlasmap:https://github.com/ppatade/lgi-mapfiles/blob/main/${header.client}.adm?raw=true")
-                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .to("https://lgi-backend-git-lgi-poc-quote.apps.cluster-fzgbp.fzgbp.sandbox1096.opentlc.com/Motor?bridgeEndpoint=true")
-                .convertBodyTo(String.class)
-            .when(simple("${header.client} == 'coverfox'"))
-                .to("atlasmap:maps/policybazaar.adm")
+            .when(header("client").isNotNull())
+                .toD("atlasmap:maps/${header.client}.adm")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .to("https://lgi-backend-git-lgi-poc-quote.apps.cluster-fzgbp.fzgbp.sandbox1096.opentlc.com/Motor?bridgeEndpoint=true")
                 .convertBodyTo(String.class)
             .otherwise()
-                .to("atlasmap:maps/policybazaar.adm")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .to("https://lgi-backend-git-lgi-poc-quote.apps.cluster-fzgbp.fzgbp.sandbox1096.opentlc.com/Motor?bridgeEndpoint=true")
-                .convertBodyTo(String.class);;
+                .convertBodyTo(String.class);
 
     }
 }
