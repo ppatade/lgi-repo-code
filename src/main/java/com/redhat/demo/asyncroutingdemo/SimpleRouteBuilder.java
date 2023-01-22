@@ -38,7 +38,7 @@ public class SimpleRouteBuilder extends RouteBuilder {
         from("direct:async-quote")
         .wireTap("direct:wiretap-quotelo-req")
         .choice()
-            .when(header("client").isNotNull())
+            .when(simple("${header.client} != null"))
                 .toD("atlasmap:maps/${header.client}.adm")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
