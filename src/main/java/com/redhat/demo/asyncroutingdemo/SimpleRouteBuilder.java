@@ -39,7 +39,7 @@ public class SimpleRouteBuilder extends RouteBuilder {
         .wireTap("direct:wiretap-quotelo-req")
         .choice()
             .when(simple("${header.client} == 'policybazaar'"))
-                .to("atlasmap:maps/${header.client}.adm")
+                .toD("atlasmap:maps/${header.client}.adm")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .to("https://lgi-backend-git-lgi-poc-quote.apps.cluster-fzgbp.fzgbp.sandbox1096.opentlc.com/Motor?bridgeEndpoint=true")
