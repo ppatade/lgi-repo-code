@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.http.base.HttpOperationFailedException;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -25,15 +26,26 @@ public class SimpleRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        onException(Exception.class).process(new Processor() {
+
+            public void process(Exchange exchange) throws Exception {
+                System.out.println("--- EXCEPTION ---");
+                System.out.println(exchange.getMessage());
+            }
+        }).log("Received body ").handled(true)
+        .to("language:constant:Bad Request");;
 
         restConfiguration()
         .component("servlet");
 
         rest()
         .consumes(MediaType.APPLICATION_JSON_VALUE)
+        .consumes(MediaType.APPLICATION_XML_VALUE)
         .produces(MediaType.APPLICATION_JSON_VALUE)
 
         .post("/motor").to("direct:async-quote");
+
+        
 
         from("direct:async-quote")
        // .wireTap("direct:wiretap-quotelo-req")
@@ -54,5 +66,15 @@ public class SimpleRouteBuilder extends RouteBuilder {
                 .to("https://lgi-backend-git-lgi-poc-quote.apps.cluster-fzgbp.fzgbp.sandbox1096.opentlc.com/Motor?bridgeEndpoint=true")
                 .convertBodyTo(String.class);;
 
+        from("direct:HttpFailed")
+        .wireTap("direct:wiretap-log")
+        .to("language:constant:Bad Request");
+
+        from("direct:wiretap-log")
+        .convertBodyTo(String.class)
+        .to("log: ---- EXCEPTION ----");
+
+
     }
 }
+
